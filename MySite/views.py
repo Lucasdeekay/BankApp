@@ -117,22 +117,22 @@ def logout_view(request):
     return redirect('login')
 
 
-# @login_required
+@login_required
 def user_dashboard(request):
-    # user = request.user
-    # try:
-    #     token_balance = Token.objects.get(user=user).token_amount
-    # except Token.DoesNotExist:
-    #     token_balance = 0
-    #
-    # recent_transactions = Transaction.objects.filter(user=user).order_by('-created_at')[:5]  # Get 5 recent transactions
-    #
-    # context = {
-    #     'user': user,
-    #     'token_balance': token_balance,
-    #     'recent_transactions': recent_transactions,
-    # }
-    return render(request, 'user_dashboard.html')
+    kyc = get_object_or_404(KYC, user=request.user)
+    try:
+        token_balance = Token.objects.get(user=request.user).token_amount
+    except Token.DoesNotExist:
+        token_balance = 0
+
+    recent_transactions = Transaction.objects.filter(user=request.user).order_by('-created_at')[:5]  # Get 5 recent transactions
+
+    context = {
+        'kyc': kyc,
+        'token_balance': token_balance,
+        'recent_transactions': recent_transactions,
+    }
+    return render(request, 'user_dashboard.html', context)
 
 
 @login_required
@@ -179,8 +179,8 @@ def profile_view(request):
 
         kyc.save()
 
-        return redirect('login')
-    return render(request, 'register.html', context={'user': kyc})
+        return redirect('profile')
+    return render(request, 'profile.html', context={'kyc': kyc})
 
 
 def verify_payment(request, reference):
@@ -196,6 +196,7 @@ def verify_payment(request, reference):
 
 @login_required
 def deposit(request):
+    kyc = get_object_or_404(KYC, user=request.user)
     if request.method == 'POST':
         deposit_amount = request.POST.get('amount').strip()
 
@@ -239,16 +240,17 @@ def deposit(request):
 
             except (ValueError, User.DoesNotExist):
                 messages.error(request, 'Invalid deposit amount or conversion rate error.')
-                return render(request, 'deposit.html')
+                return redirect('deposit')
 
         else:
             return JsonResponse(response)
 
-    return render(request, 'deposit.html')
+    return render(request, 'deposit.html', context={'kyc': kyc})
 
 
 @login_required
 def withdraw(request):
+    kyc = get_object_or_404(KYC, user=request.user)
     if request.method == 'POST':
         withdrawal_amount = request.POST.get('amount').strip()
         bank_name = request.POST.get('bank_name').strip()
@@ -288,13 +290,14 @@ def withdraw(request):
 
         except (ValueError, User.DoesNotExist):
             messages.error(request, 'Invalid withdrawal amount or conversion rate error.')
-            return render(request, 'withdraw.html')
+            return redirect('withdraw')
 
-    return render(request, 'withdraw.html')
+    return render(request, 'withdraw.html', context={'kyc': kyc})
 
 
 @login_required
 def transfer(request):
+    kyc = get_object_or_404(KYC, user=request.user)
     if request.method == 'POST':
         recipient_username = request.POST.get('recipient_username').strip()
         transfer_amount = request.POST.get('amount').strip()
@@ -312,14 +315,14 @@ def transfer(request):
 
             if user_token.naira_amount < transfer_amount:
                 messages.error(request, 'Insufficient balance.')
-                return render(request, 'transfer.html')
+                return redirect('transfer')
 
             # Find recipient user
             try:
                 recipient_user = User.objects.get(username=recipient_username)
             except User.DoesNotExist:
                 messages.error(request, 'Invalid recipient username.')
-                return render(request, 'transfer.html')
+                return redirect('transfer')
 
             # Debit sender's token balance
             user_token.naira_amount -= transfer_amount
@@ -355,13 +358,14 @@ def transfer(request):
 
         except (ValueError, User.DoesNotExist):
             messages.error(request, 'Invalid transfer amount or recipient username error.')
-            return render(request, 'transfer.html')
+            return redirect('transfer')
 
-    return render(request, 'transfer.html')
+    return render(request, 'transfer.html', context={'kyc': kyc})
 
 
 @login_required
 def saving(request):
+    kyc = get_object_or_404(KYC, user=request.user)
     if request.method == 'POST':
         saving_amount = request.POST.get('amount').strip()
         try:
@@ -404,9 +408,9 @@ def saving(request):
 
         except (ValueError, User.DoesNotExist):
             messages.error(request, 'Invalid transfer amount.')
-            return render(request, 'saving.html')
+            return redirect('saving')
 
-    return render(request, 'saving.html')
+    return render(request, 'saving.html', context={'kyc': kyc})
 
 
 @login_required
@@ -417,7 +421,7 @@ def saving_withdrawal(request):
             withdrawal_amount = float(withdrawal_amount)
             if withdrawal_amount <= 0:
                 messages.error(request, 'Withdrawal amount must be a positive number.')
-                return render(request, 'saving.html')
+                return redirect('saving')
 
             # Check user's token balance
             saving_token = Saving.objects.get_or_create(user=request.user)
@@ -427,7 +431,7 @@ def saving_withdrawal(request):
 
             if saving_token.naira_amount < withdrawal_amount:
                 messages.error(request, 'Insufficient balance.')
-                return render(request, 'saving.html')
+                return redirect('saving')
 
             saving_token.naira_amount -= withdrawal_amount
             saving_token.token_amount -= token_amount
@@ -453,6 +457,4 @@ def saving_withdrawal(request):
 
         except (ValueError, User.DoesNotExist):
             messages.error(request, 'Invalid withdrawal amount or recipient username error.')
-            return render(request, 'saving.html')
-
-    return render(request, 'saving.html')
+            return redirect('saving')
