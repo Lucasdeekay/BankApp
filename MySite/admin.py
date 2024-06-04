@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import KYC, Token, Transaction
+from .models import KYC, Token, Transaction, Saving
 
 
 # Register your models here.
@@ -11,6 +11,11 @@ class KYCAdmin(admin.ModelAdmin):
 
 @admin.register(Token)
 class TokenAdmin(admin.ModelAdmin):
+    list_display = ['user', 'naira_amount', 'token_amount']
+
+
+@admin.register(Saving)
+class SavingAdmin(admin.ModelAdmin):
     list_display = ['user', 'naira_amount', 'token_amount']
 
 

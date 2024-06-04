@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 ps-0">
+                <h3>Edit Profile</h3>
+            </div>
+            <div class="col-sm-6 pe-0">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">
+                        <i class="fa-solid fa-house"></i>
+                    </a></li>
+                    <li class="breadcrumb-item active">Settings</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-8">
+                <form class="card">
+                    <div class="card-header pb-0">
+                        <h3 class="card-title mb-0">Edit Profile</h3>
+                        <div class="card-options"><a class="card-options-collapse" href="#"
+                                                     data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a
+                                class="card-options-remove" href="#" data-bs-toggle="card-remove"><i
+                                class="fe fe-x"></i></a></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input class="form-control" type="text" placeholder="Username" disabled>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Email address</label>
+                                    <input class="form-control" name="email" type="email" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input class="form-control" name="first_name" type="text" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input class="form-control" name="last_name" type="text" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <input class="form-control" name="address" type="text" placeholder="Home Address">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input class="form-control" name="phone_number" type="text" placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">National ID</label>
+                                    <input class="form-control" name="national_id" type="number" placeholder="NIN">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-end">
+                        <button class="btn btn-primary" type="submit">Update Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

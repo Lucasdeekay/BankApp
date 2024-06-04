@@ -10,7 +10,6 @@ class KYC(models.Model):
     email = models.EmailField()
     national_id = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=15)
-    date_of_birth = models.DateField()
     address = models.CharField(max_length=255)
     kyc_verified = models.BooleanField(default=False)
 
@@ -18,8 +17,15 @@ class KYC(models.Model):
 class Token(models.Model):
     """Model to store user token balances"""
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    naira_amount = models.DecimalField(max_digits=15, decimal_places=2)
-    token_amount = models.DecimalField(max_digits=15, decimal_places=9)
+    naira_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    token_amount = models.DecimalField(max_digits=15, decimal_places=9, default=0.00)
+
+
+class Saving(models.Model):
+    """Model to store user token balances"""
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    naira_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0.00)
+    token_amount = models.DecimalField(max_digits=15, decimal_places=9, default=0.00)
 
 
 class Transaction(models.Model):
@@ -28,6 +34,7 @@ class Transaction(models.Model):
         ('deposit', 'Deposit'),
         ('withdrawal', 'Withdrawal'),
         ('transfer', 'Transfer'),
+        ('saving', 'Saving'),
     )
     transaction_type = models.CharField(max_length=10, choices=TRANSACTION_TYPE)
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sent_transactions')

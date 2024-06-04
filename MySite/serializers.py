@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import KYC, ConversionRate, Token, Transaction
+from .models import KYC, Token, Transaction, Saving
 
 
 class KYCSerializer(serializers.ModelSerializer):
@@ -11,6 +11,12 @@ class KYCSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Token
+        fields = '__all__'
+
+
+class SavingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Saving
         fields = '__all__'
 
 

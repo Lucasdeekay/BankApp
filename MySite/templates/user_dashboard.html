@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 p-0">
+                <h3>Dashboard </h3>
+            </div>
+            <div class="col-sm-6 p-0">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">
+                        <i class="fa-solid fa-house"></i>
+                    </a></li>
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid default-dashboard">
+    <div class="row">
+        <div class="col-xxl-4 col-xl-100 box-col-12 ps-4 pe-4 left-background">
+            <div class="row bg-light h-100 p-3 pt-4 pb-4">
+                <div class="col-12 col-xl-50 box-col-6">
+                    <div class="card welcome-card">
+                        <div class="card-body">
+                            <div class="d-flex">
+                                <div class="flex-grow-1">
+                                    <h1>Hello, John</h1>
+                                    <p>Welcome back! Let's start from where you left.</p><a class="btn"
+                                                                                            href="user-profile.html">View
+                                    Profile</a>
+                                </div>
+                                <div class="flex-shrink-0"><img src="{% static 'assets/images/dashboard/welcome.png' %}"
+                                                                alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-xl-50 box-col-6">
+                    <div class="row">
+                        <div class="col-12 col-lg-12 col-md-6 box-col-12">
+                            <div class="card total-earning">
+                                <div class="card-body money">
+                                    <div class="customer-card d-flex b-l-secondary border-2">
+                                        <div class="ms-3">
+                                            <h3 class="mt-1">Naira Amount</h3>
+                                            <h5 class="mt-1">$5.873</h5>
+                                        </div>
+                                        <div class="dashboard-user bg-light-secondary"><span></span>
+                                            <i class="text-warning fa-solid fa-hand-holding-dollar"></i>
+                                        </div>
+                                    </div>
+                                    <div class="customer mt-2"><span class="me-1">
+                                        <i class="fa-solid fa-sack-dollar" style="color: #FFD43B;"></i>
+                                    </span><span class="font-success me-2"></span><span>Actual Account Balance</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-12 col-md-6 box-col-12">
+                            <div class="card total-earning">
+                                <div class="card-body">
+                                    <div class="customer-card d-flex b-l-primary border-2">
+                                        <div class="ms-3">
+                                            <h3 class="mt-1">Token Amount</h3>
+                                            <h5 class="mt-1">1.485</h5>
+                                        </div>
+                                        <div class="dashboard-user bg-light-primary"><span></span>
+                                            <i class="text-primary fa-solid fa-coins"></i>
+                                        </div>
+                                    </div>
+                                    <div class="customer mt-2"><span class="me-1">
+                                        <i class="fa-solid fa-scale-balanced" style="color: #74C0FC;"></i>
+                                    </span><span class="font-success me-2"></span><span>Converted at #100 per token</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-8 col-xl-100 box-col-12">
+            <div class="row">
+                <div class="col-xxl-8 col-xl-100 box-col-12 proorder-xl-1">
+                    <div class="card">
+                        <div class="card-header card-no-border pb-0">
+                            <div class="header-top">
+                                <h4>Recent Transactions</h4>
+                            </div>
+                        </div>
+                        <div class="card-body pt-0 recent">
+                            <div class="table-responsive custom-scrollbar">
+                                <div id="resent-order_wrapper" class="dataTables_wrapper no-footer">
+                                    <table class="table display dataTable no-footer" id="resent-order"
+                                           style="width: 100%;" role="grid">
+                                        <thead>
+                                        <tr role="row">
+                                            <th class="sorting" tabindex="0" aria-controls="resent-order" rowspan="1"
+                                                colspan="1"
+                                                aria-label="Customers name: activate to sort column ascending"
+                                                style="width: 144px;">Sender name
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="resent-order" rowspan="1"
+                                                colspan="1" aria-label="Status  : activate to sort column ascending"
+                                                style="width: 59px;">Transaction Type
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="resent-order" rowspan="1"
+                                                colspan="1" aria-label="Price: activate to sort column ascending"
+                                                style="width: 35px;">Amount
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="resent-order" rowspan="1"
+                                                colspan="1" aria-label="Price: activate to sort column ascending"
+                                                style="width: 35px;">Tokens
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="resent-order" rowspan="1"
+                                                colspan="1" aria-label="Order Date: activate to sort column ascending"
+                                                style="width: 41px;">Order Date
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+
+                                        <tr role="row" class="odd">
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="flex-grow-1 ms-2">
+                                                        <h6>Elle Amberson</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="badge badge-light-primary rounded-pill txt-primary">
+                                                    Paid
+                                                </button>
+                                            </td>
+                                            <td>#152</td>
+                                            <td>52</td>
+                                            <td>
+                                                <h6>15 Nov, 2022</h6><span>02:45 PM</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
