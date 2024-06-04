@@ -1,9 +1,13 @@
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from paystackapi import transaction
 
 from MySite.models import KYC, Token, Transaction, Saving
 
@@ -179,41 +183,66 @@ def profile_view(request):
     return render(request, 'register.html', context={'user': kyc})
 
 
+def verify_payment(request, reference):
+    response = transaction.Transaction.verify(reference)
+
+    if response['status'] and response['data']['status'] == 'success':
+        messages.error(request, 'Payment successful')
+        return redirect('user_dashboard')
+    else:
+        messages.error(request, 'Payment verification failed')
+        return redirect('user_dashboard')
+
+
 @login_required
 def deposit(request):
     if request.method == 'POST':
         deposit_amount = request.POST.get('amount').strip()
-        try:
-            deposit_amount = float(deposit_amount)  # Convert to float for calculations
-            if deposit_amount <= 0:
-                messages.error(request, 'Deposit amount must be a positive number.')
+
+        kyc = get_object_or_404(KYC, user=request.user)
+
+        # Initialize transaction
+        response = transaction.Transaction.initialize(
+            reference=str(uuid.uuid4()),
+            amount=deposit_amount,
+            email=kyc.email
+        )
+
+        if response['status']:
+            try:
+                deposit_amount = float(deposit_amount)  # Convert to float for calculations
+                if deposit_amount <= 0:
+                    messages.error(request, 'Deposit amount must be a positive number.')
+                    return render(request, 'deposit.html')
+
+                # Get conversion rate
+                user_token = Token.objects.get_or_create(user=request.user)  # Assuming one conversion rate object
+                conversion_rate = 100
+
+                # Calculate token amount
+                token_amount = deposit_amount / conversion_rate  # Convert to integer for tokens
+
+                user_token.naira_amount += deposit_amount
+                user_token.token_amount += token_amount
+                user_token.save()
+
+                Transaction.objects.create(
+                    transaction_type='deposit',
+                    sender=request.user,
+                    receiver=request.user,
+                    amount=deposit_amount,
+                    token_amount=token_amount,  # Negative for received amount
+                )
+
+                messages.success(request, f"Deposited {deposit_amount} Naira. You received {token_amount} Tokens.")
+                return HttpResponseRedirect(response['data']['authorization_url'])
+
+            except (ValueError, User.DoesNotExist):
+                messages.error(request, 'Invalid deposit amount or conversion rate error.')
                 return render(request, 'deposit.html')
 
-            # Get conversion rate
-            user_token = Token.objects.get_or_create(user=request.user)  # Assuming one conversion rate object
-            conversion_rate = 100
-
-            # Calculate token amount
-            token_amount = deposit_amount / conversion_rate  # Convert to integer for tokens
-
-            user_token.naira_amount += deposit_amount
-            user_token.token_amount += token_amount
-            user_token.save()
-
-            Transaction.objects.create(
-                transaction_type='deposit',
-                sender=request.user,
-                receiver=request.user,
-                amount=deposit_amount,
-                token_amount=token_amount,  # Negative for received amount
-            )
-
-            messages.success(request, f"Deposited {deposit_amount} Naira. You received {token_amount} Tokens.")
-            return redirect('user_dashboard')  # Redirect to user dashboard after successful deposit
-
-        except (ValueError, User.DoesNotExist):
-            messages.error(request, 'Invalid deposit amount or conversion rate error.')
-            return render(request, 'deposit.html')
+        else:
+            return JsonResponse(response)
 
     return render(request, 'deposit.html')
 

@@ -147,3 +147,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # SECURE_BROWSER_XSS_FILTER = True
 
 LOGIN_URL = 'login'
+
+PAYSTACK_PUBLIC_KEY = 'your-paystack-public-key'
+PAYSTACK_SECRET_KEY = 'your-paystack-secret-key'

@@ -18,6 +18,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('dashboard/', views.user_dashboard, name='user_dashboard'),
     path('deposit/', views.deposit, name='deposit'),
+    path('verify/<str:reference>/', views.verify_payment, name='verify_payment'),
     path('withdraw/', views.withdraw, name='withdraw'),
     path('transfer/', views.transfer, name='transfer'),
     path('saving/', views.saving, name='saving'),
