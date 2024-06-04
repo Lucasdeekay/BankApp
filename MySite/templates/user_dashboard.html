@@ -31,7 +31,7 @@
                         <div class="card-body">
                             <div class="d-flex">
                                 <div class="flex-grow-1">
-                                    <h1>Hello, John</h1>
+                                    <h1>Hello, {{ kyc.last_name }}</h1>
                                     <p>Welcome back! Let's start from where you left.</p><a class="btn"
                                                                                             href="{% url 'profile' %}">View
                                     Profile</a>
@@ -51,7 +51,7 @@
                                     <div class="customer-card d-flex b-l-secondary border-2">
                                         <div class="ms-3">
                                             <h3 class="mt-1">Naira Amount</h3>
-                                            <h5 class="mt-1">#5870</h5>
+                                            <h5 class="mt-1">#{{ token.naira_amount }}</h5>
                                         </div>
                                         <div class="dashboard-user bg-light-secondary"><span></span>
                                             <i class="text-warning fa-solid fa-hand-holding-dollar"></i>
@@ -70,7 +70,7 @@
                                     <div class="customer-card d-flex b-l-primary border-2">
                                         <div class="ms-3">
                                             <h3 class="mt-1">Token Amount</h3>
-                                            <h5 class="mt-1">58.7</h5>
+                                            <h5 class="mt-1">{{ token.token_amount }}</h5>
                                         </div>
                                         <div class="dashboard-user bg-light-primary"><span></span>
                                             <i class="text-primary fa-solid fa-coins"></i>
@@ -126,27 +126,27 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-
-
+                                        {% for transaction in recent_transactions %}
                                         <tr role="row" class="odd">
                                             <td>
                                                 <div class="d-flex">
                                                     <div class="flex-grow-1 ms-2">
-                                                        <h6>Elle Amberson</h6>
+                                                        <h6>{{ transaction.sender.first_name }} {{ transaction.sender.last_name }}</h6>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <button class="badge badge-light-primary rounded-pill txt-primary">
-                                                    Paid
+                                                    {{ transaction.transaction_type }}
                                                 </button>
                                             </td>
-                                            <td>#1520</td>
-                                            <td>15.2</td>
+                                            <td>#{{ transaction.amount }}</td>
+                                            <td>{{ transaction.token_amount }}</td>
                                             <td>
-                                                <h6>15 Nov, 2022</h6><span>02:45 PM</span>
+                                                <h6>{{ transaction.created_at }}</h6>
                                             </td>
                                         </tr>
+                                        {% endfor %}
                                         </tbody>
                                     </table>
                                 </div>

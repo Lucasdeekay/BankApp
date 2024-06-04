@@ -121,7 +121,7 @@ def logout_view(request):
 def user_dashboard(request):
     kyc = get_object_or_404(KYC, user=request.user)
     try:
-        token_balance = Token.objects.get(user=request.user).token_amount
+        token_balance = Token.objects.get(user=request.user)
     except Token.DoesNotExist:
         token_balance = 0
 
@@ -129,7 +129,7 @@ def user_dashboard(request):
 
     context = {
         'kyc': kyc,
-        'token_balance': token_balance,
+        'token': token_balance,
         'recent_transactions': recent_transactions,
     }
     return render(request, 'user_dashboard.html', context)
@@ -366,6 +366,7 @@ def transfer(request):
 @login_required
 def saving(request):
     kyc = get_object_or_404(KYC, user=request.user)
+    saving_token = Saving.objects.get_or_create(user=request.user)
     if request.method == 'POST':
         saving_amount = request.POST.get('amount').strip()
         try:
@@ -389,7 +390,6 @@ def saving(request):
             user_token.save()
 
             # Credit recipient's token balance
-            saving_token = Saving.objects.get_or_create(user=request.user)
             saving_token.naira_amount += saving_amount
             saving_token.token_amount += token_amount
             saving_token.save()
@@ -410,7 +410,7 @@ def saving(request):
             messages.error(request, 'Invalid transfer amount.')
             return redirect('saving')
 
-    return render(request, 'saving.html', context={'kyc': kyc})
+    return render(request, 'saving.html', context={'kyc': kyc, 'saving': saving_token})
 
 
 @login_required
