@@ -76,6 +76,11 @@
                 <div class="card-header pb-0">
                     <h3>Save Your Funds</h3>
                 </div>
+                <div id="toast">
+                    {% for message in messages %}
+                    <div class="alert alert-info" role="alert"><strong></strong><i>{{ message }}</i></div>
+                    {% endfor %}
+                </div>
                 <div class="card-body">
                     <form class="theme-form e-commerce-form row" method="post" action="">
                         {% csrf_token %}

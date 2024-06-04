@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 {% load static %}
 <html lang="en">
-  <head>
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" href="{% static 'assets/images/logo.png' %}" type="image/x-icon">
+    <link rel="icon" href="{% static 'assets/images/logo.png' %}" type="image/x-icon">
     <link rel="shortcut icon" href="{% static 'assets/images/logo.png' %}" type="image/x-icon">
     <title>Dominion University Banking Wallet</title>
     <!-- Google font-->
@@ -29,36 +29,51 @@
     <link id="color" rel="stylesheet" href="{% static 'assets/css/color-1.css' %}" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/responsive.css' %}">
-  </head>
-  <body>
-    <!-- login page start-->
-    <div class="container-fluid p-0">
-      <div class="row m-0">
+    <!--  jQuer cdn  -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+<body>
+<!-- login page start-->
+<div class="container-fluid p-0">
+    <div class="row m-0">
         <div class="col-12 p-0">
-          <div class="login-card login-dark">
-            <div>
-              <div><a class="logo" href="{% url 'user_dashboard' %}"><img class="img-fluid for-light" width="100px" src="{% static 'assets/images/logo.png' %}" alt="looginpage"><img class="img-fluid for-dark" width="100px" src="{% static 'assets/images/logo/logo.png' %}" alt="looginpage"></a></div>
-                {% block content %}
-                {% endblock content %}
+            <div class="login-card login-dark">
+                <div>
+                    <div><a class="logo" href="{% url 'user_dashboard' %}"><img class="img-fluid for-light"
+                                                                                width="100px"
+                                                                                src="{% static 'assets/images/logo.png' %}"
+                                                                                alt="looginpage"><img
+                            class="img-fluid for-dark" width="100px" src="{% static 'assets/images/logo/logo.png' %}"
+                            alt="looginpage"></a></div>
+                    {% block content %}
+                    {% endblock content %}
+                </div>
             </div>
-          </div>
         </div>
-      </div>
-      <!-- latest jquery-->
-      <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-      <!-- Bootstrap js-->
-      <script src="{% static 'assets/js/bootstrap/bootstrap.bundle.min.js' %}"></script>
-      <!-- feather icon js-->
-      <script src="{% static 'assets/js/icons/feather-icon/feather.min.js' %}"></script>
-      <script src="{% static 'assets/js/icons/feather-icon/feather-icon.js' %}"></script>
-      <!-- scrollbar js-->
-      <!-- Sidebar jquery-->
-      <script src="{% static 'assets/js/config.js' %}"></script>
-      <!-- Plugins JS start-->
-      <!-- Plugins JS Ends-->
-      <!-- Theme js-->
-      <script src="{% static 'assets/js/script.js' %}"></script>
-      <!-- Plugin used-->
     </div>
-  </body>
+    <!-- latest jquery-->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <!-- Bootstrap js-->
+    <script src="{% static 'assets/js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <!-- feather icon js-->
+    <script src="{% static 'assets/js/icons/feather-icon/feather.min.js' %}"></script>
+    <script src="{% static 'assets/js/icons/feather-icon/feather-icon.js' %}"></script>
+    <!-- scrollbar js-->
+    <!-- Sidebar jquery-->
+    <script src="{% static 'assets/js/config.js' %}"></script>
+    <!-- Plugins JS start-->
+    <!-- Plugins JS Ends-->
+    <!-- Theme js-->
+    <script src="{% static 'assets/js/script.js' %}"></script>
+    <!-- Plugin used-->
+
+    <script>
+        $(function(){
+            $("#toast").fadeIn(5000);
+          $("#toast").fadeOut(5000);
+        })
+    </script>
+</div>
+</body>
 </html>
