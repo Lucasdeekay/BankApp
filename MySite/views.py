@@ -14,22 +14,19 @@ from MySite.models import KYC, Token, Transaction, Saving
 
 # Create your views here.
 def login_view(request):
-    if request.user.is_authenticated:
-        return redirect('user_dashboard')
-    else:
-        if request.method == 'POST':
-            username = request.POST['username'].strip()
-            password = request.POST['password'].strip()
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                # Redirect to successful login page
-                return redirect('user_dashboard')  # Replace 'home' with your desired redirect URL
-            else:
-                # Invalid login credentials
-                error_message = 'Invalid username or password.'
-                return render(request, 'login.html', {'error_message': error_message})
-        return render(request, 'login.html')
+    if request.method == 'POST':
+        username = request.POST['username'].strip()
+        password = request.POST['password'].strip()
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to successful login page
+            return redirect('user_dashboard')  # Replace 'home' with your desired redirect URL
+        else:
+            # Invalid login credentials
+            messages.error(request, 'Invalid username or password.')
+            return redirect( 'login')
+    return render(request, 'login.html')
 
 
 def register_view(request):
@@ -47,8 +44,8 @@ def register_view(request):
             password1 = request.POST['password1'].strip()
             password2 = request.POST['password2'].strip()
             if password1 != password2:
-                error_message = 'Passwords do not match.'
-                return render(request, 'register.html', {'error_message': error_message})
+                messages.error(request, 'Passwords do not match.')
+                return render(request, 'register.html')
             # Create user
             user = User.objects.create_user(username=username, password=password1)
             user.save()
@@ -63,52 +60,36 @@ def register_view(request):
 
 
 def forgot_password_view(request):
-    if request.user.is_authenticated:
-        return redirect('user_dashboard')
-    else:
-        if request.method == 'POST':
-            email = request.POST['email'].strip()
-            try:
-                user = User.objects.get(email=email)
-                # Construct reset password URL with the user ID and token
-                reset_password_url = f"http://your_domain/reset-password/{user.id}"
-                # Send email with reset password link
-                send_mail(
-                    subject='Password Reset Link',
-                    message=f'Click the link below to reset your password:\n{reset_password_url}',
-                    from_email='your_email@example.com',  # Replace with your email address
-                    recipient_list=[email],
-                )
-                success_message = 'We sent you an email with instructions to reset your password.'
-                return render(request, 'forgot_password.html', {'success_message': success_message})
-            except User.DoesNotExist:
-                error_message = 'Email address not found.'
-                return render(request, 'forgot_password.html', {'error_message': error_message})
-        return render(request, 'forgot_password.html')
+    if request.method == 'POST':
+        email = request.POST['email'].strip()
+        try:
+            user = User.objects.get(email=email)
+            return redirect('password_reset', args=(user.id,))
+        except User.DoesNotExist:
+            messages.error(request, 'Email address not found.')
+            return redirect('forgot_password')
+    return render(request, 'forgot_password.html')
 
 
 def password_reset_view(request, user_id):
-    if request.user.is_authenticated:
-        return redirect('user_dashboard')
-    else:
-        try:
-            user = User.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            error_message = 'Invalid user ID.'
-            return render(request, 'password_reset.html', {'error_message': error_message})
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Invalid user ID.')
+        return redirect('password_reset')
 
-        if request.method == 'POST':
-            new_password1 = request.POST['new_password1'].strip()
-            new_password2 = request.POST['new_password2'].strip()
-            if new_password1 != new_password2:
-                error_message = 'Passwords do not match.'
-                return render(request, 'password_reset.html', {'error_message': error_message})
-            # Set the new password
-            user.set_password(new_password1)
-            user.save()
-            success_message = 'Password reset successfully!'
-            return render(request, 'password_reset.html', {'success_message': success_message})
-        return render(request, 'password_reset.html')
+    if request.method == 'POST':
+        new_password1 = request.POST['new_password1'].strip()
+        new_password2 = request.POST['new_password2'].strip()
+        if new_password1 != new_password2:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('password_reset')
+        # Set the new password
+        user.set_password(new_password1)
+        user.save()
+        messages.success(request, 'Password reset successfully!')
+        return redirect('password_reset')
+    return render(request, 'password_reset.html')
 
 
 @login_required

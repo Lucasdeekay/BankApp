@@ -148,5 +148,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'login'
 
-PAYSTACK_PUBLIC_KEY = 'your-paystack-public-key'
-PAYSTACK_SECRET_KEY = 'your-paystack-secret-key'
+
