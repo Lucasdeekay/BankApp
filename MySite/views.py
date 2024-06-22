@@ -64,19 +64,16 @@ def forgot_password_view(request):
         email = request.POST['email'].strip()
         try:
             user = User.objects.get(email=email)
-            return redirect('password_reset', args=(user.id,))
+            login(request, user)
+            return redirect('password_reset')
         except User.DoesNotExist:
             messages.error(request, 'Email address not found.')
             return redirect('forgot_password')
     return render(request, 'forgot_password.html')
 
 
-def password_reset_view(request, user_id):
-    try:
-        user = User.objects.get(pk=user_id)
-    except User.DoesNotExist:
-        messages.error(request, 'Invalid user ID.')
-        return redirect('password_reset')
+def password_reset_view(request):
+    user = request.user
 
     if request.method == 'POST':
         new_password1 = request.POST['new_password1'].strip()
@@ -87,8 +84,9 @@ def password_reset_view(request, user_id):
         # Set the new password
         user.set_password(new_password1)
         user.save()
+        logout(request)
         messages.success(request, 'Password reset successfully!')
-        return redirect('password_reset')
+        return redirect('login')
     return render(request, 'password_reset.html')
 
 
